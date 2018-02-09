@@ -1,8 +1,7 @@
 var fs = require('fs');
-var NetworkUtility = require('./NetworkUtility.js');
-var Config = require('./Config.js');
+var NetworkUtility = require('./network.js');
 
-function readLocalFile(filename, callback) {
+function readLocalFile(baseUrl, filename, callback) {
     try {
         if (typeof(window) === 'undefined') {
             fs.readFile(filename, { encoding: 'utf8' }, function(error, data) {
@@ -13,7 +12,7 @@ function readLocalFile(filename, callback) {
                 }
             });
         } else {
-            NetworkUtility.get(Config.baseUrl + "/" + filename, {}, function(error, body) {
+            NetworkUtility.get(baseUrl + "/" + filename, {}, function(error, body) {
                 if (error) {
                     callback(error, undefined);
                 } else {
