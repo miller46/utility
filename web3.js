@@ -42,6 +42,10 @@ function initWeb3(web3, provider, proxyConfig) {
     return web3;
 }
 
+function hexToString(web3, hex) {
+    return web3.utils.hexToAscii(hex)
+}
+
 function loadContract(web3, contractAbiFile, address, callback) {
     fileUtility.readLocalFile(contractAbiFile, function(readError, abi) {
         if (readError) {
@@ -421,6 +425,7 @@ function getBaseProxyUrl() {
 }
 
 exports.initWeb3 = initWeb3;
+exports.hexToString = hexToString;
 exports.loadContract = loadContract;
 exports.callContractFunction = callContractFunction;
 exports.call = call;
