@@ -3,12 +3,12 @@ var Buffer = IpfsAPI().Buffer;
 
 var ipfs;
 
-function initIpfs(url, port) {
+function initIpfs(host, port) {
     if (!ipfs) {
-        if (url.indexOf("://") === -1) {
+        if (host.indexOf("://") === -1) {
             throw "IPFS host url must specify protocol (e.g. http:// or https://)"
         } else {
-            protocol = host.substring(0, host.indexOf("://"));
+            var protocol = host.substring(0, host.indexOf("://"));
             host = host.substring(host.indexOf("://") + "://".length, host.length);
             ipfs = IpfsAPI({host: host, port: port, protocol: protocol})
         }
@@ -71,5 +71,6 @@ function fetchIpfsFile(ipfsPointer, callback) {
     }
 }
 
+exports.initIpfs = initIpfs;
 exports.saveIpfsFile = saveIpfsFile;
 exports.fetchIpfsFile = fetchIpfsFile;

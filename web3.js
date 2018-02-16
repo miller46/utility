@@ -17,12 +17,8 @@ function initWeb3(web3, provider, proxyConfig) {
     if (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {
         //is MetaMask
         web3 = new Web3(web3.currentProvider);
-    } else if (typeof Web3 !== 'undefined' && window.location.protocol !== "https:" && provider) {
-        //is Ethereum Client (e.g. Mist)
-        web3 = new Web3(new Web3.providers.HttpProvider(provider));
     } else {
-        //no web3 provider
-        web3 = new Web3();
+        web3 = new Web3(new Web3.providers.HttpProvider(provider));
     }
 
     if (proxyConfig) {
@@ -136,7 +132,7 @@ function callContractFunction(web3, contract, address, functionName, args, callb
                             proxy(retries - 1);
                         }, 1000);
                     } else {
-                        callback(err, undefined);
+                        callback(errJson, undefined);
                     }
                 }
             } else {
