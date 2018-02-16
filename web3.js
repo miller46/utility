@@ -141,8 +141,6 @@ function callContractFunction(web3, contract, address, functionName, args, callb
         });
     }
     try {
-        proxy(1);
-
         if (web3.currentProvider) {
             var data = contract[functionName].getData.apply(null, args);
             web3.eth.call({to: address, data: data}, function(callError, result) {

@@ -1,28 +1,21 @@
 const IpfsAPI = require('ipfs-api');
 var Buffer = IpfsAPI().Buffer;
 
-var ipfs;
-
 function initIpfs(host, port) {
-    if (!ipfs) {
-        if (host.indexOf("://") === -1) {
-            throw "IPFS host url must specify protocol (e.g. http:// or https://)"
-        } else {
-            var protocol = host.substring(0, host.indexOf("://"));
-            host = host.substring(host.indexOf("://") + "://".length, host.length);
-            ipfs = IpfsAPI({host: host, port: port, protocol: protocol})
-        }
+    if (host.indexOf("://") === -1) {
+        throw "IPFS host url must specify protocol (e.g. http:// or https://)"
+    } else {
+        var protocol = host.substring(0, host.indexOf("://"));
+        host = host.substring(host.indexOf("://") + "://".length, host.length);
+        ipfs = IpfsAPI({host: host, port: port, protocol: protocol})
     }
     return ipfs;
 }
 
-function saveIpfsFile(name, data, callback) {
+function saveIpfsFile(ipfs, name, data, callback) {
     var reader = new FileReader();
     reader.onloadend = function(event) {
         console.log(event.target.result);
-
-        var ipfs = initIpfs();
-
         var buffer = Buffer.from(reader.result);
         ipfs.files.add(buffer, function(error, response) {
             if (error) {
@@ -41,12 +34,10 @@ function saveIpfsFile(name, data, callback) {
     reader.readAsText(file);
 }
 
-function fetchIpfsFile(ipfsPointer, callback) {
+function fetchIpfsFile(ipfs, ipfsPointer, callback) {
     if (!ipfsPointer) {
         callback(new Error("multihash required"), undefined);
     } else {
-        var ipfs = initIpfs();
-
         ipfs.files.cat("/ipfs/" + ipfsPointer, function (error, stream) {
             if (error) {
                 console.log(error);
