@@ -185,9 +185,10 @@ function send(web3, contract, address, functionName, args, fromAddress, privateK
     args = Array.prototype.slice.call(args).filter(function (a) {return a !== undefined; });
     var options = {};
     if (typeof(args[args.length - 1]) === 'object' && args[args.length - 1].gas !== undefined) {
-        args[args.length - 1].gasPrice = Config.defaultGasPrice;
+        args[args.length - 1].gasPrice = args[args.length - 1].price;
         args[args.length - 1].gasLimit = args[args.length - 1].gas;
         delete args[args.length - 1].gas;
+        delete args[args.length - 1].price;
     }
     if (utils.isObject(args[args.length - 1])) {
         options = args.pop();
@@ -196,7 +197,7 @@ function send(web3, contract, address, functionName, args, fromAddress, privateK
         if (nonce === undefined || nonce < nextNonce) {
             nonce = nextNonce;
         }
-        // console.log("Nonce:", nonce);
+        console.log("Nonce:", nonce);
         options.nonce = nonce;
         if (functionName === "constructor") {
             if (options.data.slice(0,2) !== "0x") {
@@ -254,8 +255,6 @@ function send(web3, contract, address, functionName, args, fromAddress, privateK
         } catch (err) {
             callback(err, undefined);
         }
-
-        proxy();
 
         try {
             if (web3.currentProvider) {
@@ -356,7 +355,7 @@ function sign(web3, address, value, privateKey, callback) {
 
 function getNextNonce(web3, address, callback) {
     function proxy() {
-        var url = getProxyUrlForNonce();
+        var url = getProxyUrlForNonce(address);
         networkUtility.get(url, {}, function(err, body) {
             if (!err) {
                 var result = JSON.parse(body);
@@ -367,8 +366,6 @@ function getNextNonce(web3, address, callback) {
             }
         });
     }
-
-    proxy();
 
     try {
         if (web3.currentProvider) {
