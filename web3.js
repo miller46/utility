@@ -46,8 +46,8 @@ function hexToString(web3, hex) {
     return web3.utils.hexToAscii(hex)
 }
 
-function loadContract(web3, contractAbiFile, address, callback) {
-    fileUtility.readLocalFile(contractAbiFile, function(readError, abi) {
+function loadContract(web3, baseUrl, contractAbiFile, address, callback) {
+    fileUtility.readLocalFile(baseUrl, contractAbiFile, function(readError, abi) {
         if (readError) {
             callback(readError, undefined);
         } else {
